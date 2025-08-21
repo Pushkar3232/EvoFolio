@@ -1,7 +1,7 @@
 // src/components/common/Header.tsx
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, User, Home, Plus, Grid3X3 } from 'lucide-react';
+import { Menu, X, User, Home, Plus, Grid3X3, ExternalLink } from 'lucide-react';
 
 export const Header: React.FC = () => {
   const location = useLocation();
@@ -20,10 +20,16 @@ export const Header: React.FC = () => {
     setIsMenuOpen(false);
   };
 
+  const handlePortfolioClick = () => {
+    window.open('https://pushkarshinde.in', '_blank');
+    closeMenu();
+  };
+
   const navLinks = [
-    { path: '/', label: 'Home', icon: Home },
-    { path: '/create', label: 'Create Portfolio', icon: Plus },
-    { path: '/portfolios', label: 'All Portfolios', icon: Grid3X3 },
+    { path: '/', label: 'Home', icon: Home, type: 'link' },
+    { path: '/create', label: 'Create Portfolio', icon: Plus, type: 'link' },
+    { path: '/portfolios', label: 'All Portfolios', icon: Grid3X3, type: 'link' },
+    { path: '#', label: 'Developer', icon: ExternalLink, type: 'external', onClick: handlePortfolioClick },
   ];
 
   return (
@@ -41,19 +47,30 @@ export const Header: React.FC = () => {
           
           {/* Desktop Navigation */}
           <nav className="hidden md:flex space-x-8">
-            {navLinks.map(({ path, label, icon: Icon }) => (
-              <Link
-                key={path}
-                to={path}
-                className={`font-medium transition-all duration-200 flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-gray-50 ${
-                  location.pathname === path 
-                    ? 'text-blue-600 bg-blue-50' 
-                    : 'text-gray-600 hover:text-blue-600'
-                }`}
-              >
-                <Icon size={18} />
-                <span>{label}</span>
-              </Link>
+            {navLinks.map(({ path, label, icon: Icon, type, onClick }) => (
+              type === 'external' ? (
+                <button
+                  key={label}
+                  onClick={onClick}
+                  className="font-medium transition-all duration-200 flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-gray-50 text-gray-600 hover:text-blue-600"
+                >
+                  <Icon size={18} />
+                  <span>{label}</span>
+                </button>
+              ) : (
+                <Link
+                  key={path}
+                  to={path}
+                  className={`font-medium transition-all duration-200 flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-gray-50 ${
+                    location.pathname === path 
+                      ? 'text-blue-600 bg-blue-50' 
+                      : 'text-gray-600 hover:text-blue-600'
+                  }`}
+                >
+                  <Icon size={18} />
+                  <span>{label}</span>
+                </Link>
+              )
             ))}
           </nav>
 
@@ -71,20 +88,31 @@ export const Header: React.FC = () => {
         {isMenuOpen && (
           <div className="md:hidden py-4 border-t border-gray-200 bg-white">
             <nav className="flex flex-col space-y-2">
-              {navLinks.map(({ path, label, icon: Icon }) => (
-                <Link
-                  key={path}
-                  to={path}
-                  onClick={closeMenu}
-                  className={`font-medium transition-all duration-200 flex items-center space-x-3 px-4 py-3 rounded-md mx-2 ${
-                    location.pathname === path 
-                      ? 'text-blue-600 bg-blue-50' 
-                      : 'text-gray-600 hover:text-blue-600 hover:bg-gray-50'
-                  }`}
-                >
-                  <Icon size={20} />
-                  <span>{label}</span>
-                </Link>
+              {navLinks.map(({ path, label, icon: Icon, type, onClick }) => (
+                type === 'external' ? (
+                  <button
+                    key={label}
+                    onClick={onClick}
+                    className="font-medium transition-all duration-200 flex items-center space-x-3 px-4 py-3 rounded-md mx-2 text-gray-600 hover:text-blue-600 hover:bg-gray-50 text-left"
+                  >
+                    <Icon size={20} />
+                    <span>{label}</span>
+                  </button>
+                ) : (
+                  <Link
+                    key={path}
+                    to={path}
+                    onClick={closeMenu}
+                    className={`font-medium transition-all duration-200 flex items-center space-x-3 px-4 py-3 rounded-md mx-2 ${
+                      location.pathname === path 
+                        ? 'text-blue-600 bg-blue-50' 
+                        : 'text-gray-600 hover:text-blue-600 hover:bg-gray-50'
+                    }`}
+                  >
+                    <Icon size={20} />
+                    <span>{label}</span>
+                  </Link>
+                )
               ))}
             </nav>
           </div>
